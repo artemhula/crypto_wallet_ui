@@ -1,11 +1,28 @@
+import 'dart:math';
+
 import 'package:chart_sparkline/chart_sparkline.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:syncfusion_flutter_charts/charts.dart';
-import 'package:syncfusion_flutter_charts/sparkcharts.dart';
 
 class CryptoBlock extends StatelessWidget {
-  const CryptoBlock({super.key});
+  const CryptoBlock({
+    super.key,
+    required this.coinName,
+    required this.coinAmount,
+    required this.coinSuffix,
+    required this.svgPath,
+    required this.coinPrice,
+    required this.coinChange,
+    required this.coinData,
+  });
+
+  final String coinName;
+  final double coinAmount;
+  final String coinSuffix;
+  final String svgPath;
+  final double coinPrice;
+  final double coinChange;
+  final List<double> coinData;
 
   @override
   Widget build(BuildContext context) {
@@ -18,7 +35,8 @@ class CryptoBlock extends StatelessWidget {
         ),
       ),
       child: Container(
-        color: const Color.fromRGBO(255, 252, 159, 1.0),
+        color:
+            Color((Random().nextDouble() * 0xFFFFFF).toInt()).withOpacity(0.9),
         width: 190.0,
         height: 190.0,
         child: Stack(
@@ -38,7 +56,7 @@ class CryptoBlock extends StatelessWidget {
                           SizedBox(
                             width: 100.0,
                             child: Text(
-                              'Binance Coin',
+                              coinName,
                               style: Theme.of(context)
                                   .textTheme
                                   .bodyMedium!
@@ -52,7 +70,7 @@ class CryptoBlock extends StatelessWidget {
                             ),
                           ),
                           Text(
-                            '56.8 BNB',
+                            '${coinAmount.toStringAsFixed(2)} $coinSuffix',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyMedium!
@@ -67,7 +85,7 @@ class CryptoBlock extends StatelessWidget {
                         ],
                       ),
                       SvgPicture.asset(
-                        'assets/icons/bnb.svg',
+                        svgPath,
                         width: 25,
                       ),
                     ],
@@ -77,7 +95,7 @@ class CryptoBlock extends StatelessWidget {
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
-                        '\$1,460',
+                        '\$${coinPrice.toInt()}',
                         style: Theme.of(context).textTheme.bodyLarge!.copyWith(
                               fontSize: 18,
                               fontWeight: FontWeight.bold,
@@ -85,7 +103,7 @@ class CryptoBlock extends StatelessWidget {
                             ),
                       ),
                       Text(
-                        '2.44%',
+                        '$coinChange%',
                         style: Theme.of(context).textTheme.bodyMedium!.copyWith(
                               fontWeight: FontWeight.bold,
                               color: Theme.of(context).colorScheme.surface,
@@ -96,14 +114,30 @@ class CryptoBlock extends StatelessWidget {
                 ],
               ),
             ),
-            Sparkline(
-              data: [50, 52,48,55,54,57,55,60,59,60,55,50,53,52,53,48,50,52,55,52,60,58,68,73],
-              useCubicSmoothing: true,
-              cubicSmoothingFactor: 0.2,
-              lineColor: Colors.black,
-              lineWidth: 2.0,
-              fillMode: FillMode.below,
-              fillColor: Colors.black.withOpacity(0.2),
+            Column(
+              children: [
+                Expanded(
+                  child: Container(
+                    color: Colors.transparent,
+                  ),
+                ),
+                Expanded(
+                  child: Sparkline(
+                    data: coinData,
+                    useCubicSmoothing: true,
+                    cubicSmoothingFactor: 0.2,
+                    lineColor: Colors.black,
+                    lineWidth: 1.5,
+                    fillMode: FillMode.below,
+                    fillColor: Colors.black.withOpacity(0.2),
+                  ),
+                ),
+                Expanded(
+                  child: Container(
+                    color: Colors.black.withOpacity(0.2),
+                  ),
+                ),
+              ],
             ),
           ],
         ),
